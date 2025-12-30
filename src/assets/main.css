@@ -1,0 +1,75 @@
+@font-face {
+  font-family: "Kanit";
+  src: url("./fonts/Kanit/Kanit-Regular.woff") format("woff2");
+  font-weight: 400;
+}
+@font-face {
+  font-family: "Kanit";
+  src: url("./fonts/Kanit/Kanit-Medium.woff") format("woff2");
+  font-weight: 600;
+}
+@font-face {
+  font-family: "Kanit";
+  src: url("./fonts/Kanit/Kanit-Bold.woff") format("woff2");
+  font-weight: 700;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body, input, button {
+  font-family: "Kanit";
+}
+
+body {
+  width: 100%;
+  min-height: 100vh;
+  background-image: url("/bg-image.webp");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+:root {
+  --fade-duration: .75s;
+  --dissolve-duration: .75s;
+}
+
+.fade-enter-active {
+  animation: fade-in var(--fade-duration);
+}
+
+.fade-leave-active {
+  animation: fade-in var(--fade-duration) reverse;
+}
+
+.dissolve-enter-active {
+  animation: dissolve-in var(--dissolve-duration);
+}
+
+.dissolve-leave-active {
+  animation: dissolve-in var(--dissolve-duration) reverse;
+}
+
+@keyframes fade-in {
+  0% {
+    opacity: 0;
+    transform: scale(0);
+  }
+  100% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes dissolve-in {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

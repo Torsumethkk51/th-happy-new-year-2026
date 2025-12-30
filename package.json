@@ -15,6 +15,7 @@
     "lint": "eslint . --fix --cache"
   },
   "dependencies": {
+    "fireworks-js": "^2.10.8",
     "vue": "^3.5.26"
   },
   "devDependencies": {
