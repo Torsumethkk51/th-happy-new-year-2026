@@ -11,6 +11,7 @@ let username = defineModel<string>("username")
 let picPreview = ref<string>()
 let headingMoved = ref(false)
 let oldHeadingHide = ref(false)
+let isStep3Disappear = ref(false)
 
 function nextStep(delayInSec: number = 0) {
   setTimeout(() => {
@@ -82,7 +83,7 @@ watch(config, () => {
             <span>คำอวยพรปีใหม่</span>
           </h1>
         </Transition>
-        <Transition name="fade">
+        <Transition name="fade" @after-leave="isStep3Disappear = true">
           <div v-if="config && config.step === 3" class="image-input">
             <h2>เลือกรูปที่อธิบายปีนี้มาหน่อยสิ</h2>
             <input 
@@ -95,7 +96,7 @@ watch(config, () => {
           </div>
         </Transition>
         <Transition name="fade" @after-enter="onStep4End">
-          <div v-if="config && config.step >= 4" class="image-box">
+          <div v-if="config && config.step >= 4 && isStep3Disappear" class="image-box">
             <img :src="picPreview" alt="this year image">
           </div>
         </Transition>
@@ -114,6 +115,7 @@ watch(config, () => {
     display: flex;
     flex-direction: column;
     justify-content: center;
+    align-items: center;
     position: relative;
   }
 
@@ -162,12 +164,12 @@ watch(config, () => {
 
   .image-input {
     width: 100%;
+    margin: 0 auto;
     display: flex;
     flex-direction: column;
-    position: absolute;
-    top: 2.25em;
     justify-content: center;
     gap: 1em;
+    padding: 1em;
   }
 
   input {
