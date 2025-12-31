@@ -17,6 +17,7 @@
   "dependencies": {
     "@emailjs/browser": "^4.4.1",
     "fireworks-js": "^2.10.8",
+    "heic2any": "^0.0.4",
     "vue": "^3.5.26"
   },
   "devDependencies": {

@@ -1,6 +1,7 @@
 <script setup lang="ts">
 import { computed, ref, Transition, watch } from 'vue';
 import emailjs from "@emailjs/browser"
+import heic2any from "heic2any"
 
 let config = defineModel<{ 
   step: number, 
@@ -51,7 +52,18 @@ function onStep2End() {
 function onStep3End(e: Event) {
   let file = (e.target as HTMLInputElement).files?.[0] ?? null
   if (!file) return
-  picPreview.value = URL.createObjectURL(file)
+  // Check if file is HEIC/HEIF
+  if (file.type === "image/heic" || file.type === "image/heif") {
+    try {
+      const convertedBlob = await heic2any({ blob: file, toType: "image/jpeg", quality: 0.9 })
+      picPreview.value = URL.createObjectURL(convertedBlob as Blob)
+    } catch (err) {
+      console.error("HEIC conversion failed:", err)
+      alert("ไม่สามารถแปลงรูป HEIC ได้ ลองใช้ JPG/PNG แทน")
+    }
+  } else {
+    picPreview.value = URL.createObjectURL(file)
+  }
   nextStep()
 }
 
