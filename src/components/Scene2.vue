@@ -32,7 +32,7 @@ function onStep2End() {
 
 function onStep3End(e: Event) {
   let file = (e.target as HTMLInputElement).files?.[0] ?? null
-  let allowTypes = ["image/jpg", "image/jpeg", "image/png"]
+  let allowTypes = ["image/jpg", "image/jpeg", "image/png", "image/heic"]
   if (!file || !allowTypes.includes(file.type)) return
   picPreview.value = URL.createObjectURL(file)
   nextStep()

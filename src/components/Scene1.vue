@@ -84,7 +84,7 @@ function endThisScene() {
   }
 
   h1 {
-    font-size: 3em;
+    font-size: 2.5em;
     transition: transform .25s;
   }
 
@@ -99,9 +99,9 @@ function endThisScene() {
   .name-input {
     width: 100%;
     display: flex;
-    gap: .75em;
+    gap: .5em;
     position: absolute;
-    top: 3em;
+    top: 2em;
   }
 
   input {
