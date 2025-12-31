@@ -32,7 +32,7 @@ function onStep2End() {
 
 function onStep3End(e: Event) {
   let file = (e.target as HTMLInputElement).files?.[0] ?? null
-  if (!file || file.type.includes("image")) return
+  if (!file) return
   picPreview.value = URL.createObjectURL(file)
   nextStep()
 }
@@ -89,6 +89,7 @@ watch(config, () => {
               type="file" 
               id="imagePicker"
               @change="onStep3End"
+              accept="image/*, image/heic, image/heif"
             >
             <label for="imagePicker">เลือกมาเลย</label>
           </div>
