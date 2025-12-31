@@ -1,45 +1,56 @@
 <script setup lang="ts">
-import { onMounted, ref, Transition, useTemplateRef, watch, type Ref } from 'vue';
+import { ref, Transition } from 'vue';
 
+let config = defineModel<{ 
+  step: number, 
+  isEnd: boolean, 
+  isDisappear: boolean 
+}>("config")
 let currentScene = defineModel<number>("currentScene")
 let username = defineModel<string>("username")
 let headingMoved = ref(false)
-let scene1Step = ref(0) // step is 0 = not start
-let isEnd = ref(false)
 
-function nextStep() {
+function nextStep(delayInSec: number = 0) {
   setTimeout(() => {
-    scene1Step.value++
-  }, 500)
+    if (config.value) {
+      config.value.step++
+    }
+  }, delayInSec * 1000)
 }
 
-function onHeadingMoveEnd() {
+function onStep1End() {
+  nextStep(0.5)
+}
+
+function onStep2End() {
   if (headingMoved.value) return
   headingMoved.value = true
   nextStep()
 }
 
-function endThisScene() {
-  if (!username.value || username.value.trim().length === 0) return
-  isEnd.value = !isEnd.value
+function setDisapear() {
+  if (config.value) {
+    config.value.isDisappear = true
+  }
 }
 
-// step to 1 = start animation
-onMounted(() => {
-  scene1Step.value++
-})
+function endThisScene() {
+  if (config.value) {
+    config.value.isEnd = true
+  }
+}
 
 </script>
 
 <template>
-  <Transition name="dissolve" @after-leave="currentScene && currentScene++">
-    <div v-if="currentScene === 1 && !isEnd">
+  <Transition name="dissolve" @after-leave="endThisScene">
+    <div v-if="currentScene === 1 && (config && !config.isDisappear)">
       <div class="content">
-        <Transition name="fade" @after-enter="nextStep">
+        <Transition name="fade" @after-enter="onStep1End">
           <h1 
-            v-if="scene1Step >= 1"
-            :class="{ 'move-up': scene1Step >= 2 }"
-            @transitionend="onHeadingMoveEnd"
+            v-if="config && config.step >= 1"
+            :class="{ 'move-up': config && config.step >= 2 }"
+            @transitionend="onStep2End"
           >
             สวัสดีปีใหม่ <span>2026</span>
           </h1>
@@ -47,15 +58,15 @@ onMounted(() => {
         <div class="name-input">
           <Transition name="fade">
             <input 
-              v-if="scene1Step >= 3"
-              type="text" 
-              placeholder="ชื่ออะไรอะบอกหน่อยสิ"
+              v-if="config && config.step >= 3"
+              type="text"
+              placeholder="ชื่ออะไรอ่ะ บอกหน่อยสิ (ชื่อเล่นนะ)"
               v-model="username"
             >
           </Transition>
           <Transition name="fade">
-            <button v-if="username && username.length > 0" @click="endThisScene">
-              ไปกันเลย
+            <button v-if="username && username.length > 0" @click="setDisapear">
+              ไปต่อ
             </button>
           </Transition>
         </div>
