@@ -4,11 +4,12 @@ import { onMounted, ref, Transition, useTemplateRef, watch, type Ref } from 'vue
 let currentScene = defineModel<number>("currentScene")
 let username = defineModel<string>("username")
 let headingMoved = ref(false)
-let step = ref(parseInt(localStorage.getItem("scene1Step")!) || 0) // step is 0 = not start
+let scene1Step = ref(0) // step is 0 = not start
+let isEnd = ref(false)
 
 function nextStep() {
   setTimeout(() => {
-    step.value++
+    scene1Step.value++
   }, 500)
 }
 
@@ -18,44 +19,42 @@ function onHeadingMoveEnd() {
   nextStep()
 }
 
+function endThisScene() {
+  if (!username.value || username.value.trim().length === 0) return
+  isEnd.value = !isEnd.value
+}
+
 // step to 1 = start animation
 onMounted(() => {
-  step.value++
+  scene1Step.value++
 })
-
-// watch(step, () => {
-//   localStorage.setItem(
-//     "scene1Step",
-//     step.value.toString()
-//   )
-// })
 
 </script>
 
 <template>
-  <Transition name="dissolve">
-    <div v-if="currentScene === 1" ref="parent">
+  <Transition name="dissolve" @after-leave="currentScene && currentScene++">
+    <div v-if="currentScene === 1 && !isEnd">
       <div class="content">
         <Transition name="fade" @after-enter="nextStep">
           <h1 
-            v-if="step >= 1"
-            :class="{ 'move-up': step >= 2 }"
+            v-if="scene1Step >= 1"
+            :class="{ 'move-up': scene1Step >= 2 }"
             @transitionend="onHeadingMoveEnd"
           >
-            สวัสดีปีใหม่ 2026
+            สวัสดีปีใหม่ <span>2026</span>
           </h1>
         </Transition>
         <div class="name-input">
           <Transition name="fade">
             <input 
-              v-if="step >= 3"
+              v-if="scene1Step >= 3"
               type="text" 
               placeholder="ชื่ออะไรอะบอกหน่อยสิ"
               v-model="username"
             >
           </Transition>
           <Transition name="fade">
-            <button v-if="username && username.length > 0" @click="currentScene++">
+            <button v-if="username && username.length > 0" @click="endThisScene">
               ไปกันเลย
             </button>
           </Transition>
@@ -78,6 +77,10 @@ onMounted(() => {
     transition: transform .25s;
   }
 
+  span {
+    color: rgb(255, 113, 52);
+  }
+
   .move-up {
     transform: translateY(-50px);
   }
@@ -92,12 +95,16 @@ onMounted(() => {
 
   input {
     flex: 1;
-    padding: .5em;
+    padding: .5em 1em;
     font-size: 1em;
     border-radius: 10px;
     border: 0;
     box-shadow: 0 0 10px 0px rgba(0, 0, 0, .15);
-    transition: .15s;
+    transition: outline .15s ease;
+  }
+
+  input:focus, input:not(:placeholder-shown) {
+    outline: 3px solid rgb(255, 166, 0);
   }
 
   button {

@@ -6,14 +6,7 @@ import StartLoading from './components/StartLoading.vue';
 
 let isStart = ref(false)
 let username = ref("")
-let currentScene = ref(parseInt(localStorage.getItem("currentScene")!) || 1)
-
-// watch(currentScene, () => {
-//   localStorage.setItem(
-//     "currentScene",
-//     currentScene.value.toString()
-//   )
-// })
+let currentScene = ref(1)
 
 </script>
   
