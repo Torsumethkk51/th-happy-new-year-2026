@@ -106,7 +106,7 @@ function endThisScene() {
 
   input {
     flex: 1;
-    padding: .5em 1em;
+    padding: .5em;
     font-size: 1em;
     border-radius: 10px;
     border: 0;
@@ -119,7 +119,7 @@ function endThisScene() {
   }
 
   button {
-    padding: .5em;
+    padding: .6em;
     font-size: 1em;
     border-radius: 10px;
     border: 0;

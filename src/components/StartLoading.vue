@@ -37,7 +37,7 @@ function ready() {
   }
 
   h1 {
-    font-size: 1.5em;
+    font-size: 1.25em;
     transition: transform .25s;
   }
 
