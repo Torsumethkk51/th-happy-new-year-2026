@@ -49,7 +49,7 @@ function onStep2End() {
   nextStep()
 }
 
-function onStep3End(e: Event) {
+async function onStep3End(e: Event) {
   let file = (e.target as HTMLInputElement).files?.[0] ?? null
   if (!file) return
   // Check if file is HEIC/HEIF
