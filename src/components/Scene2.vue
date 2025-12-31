@@ -150,9 +150,10 @@ watch(config, () => {
   }
 
   img {
-    width: 400px;
-    height: 400px;
+    width: 100%;
+    height: 100%;
     object-fit: cover;
+    object-position: center;
   }
 
   .move-up {
