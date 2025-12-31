@@ -1,5 +1,6 @@
 <script setup lang="ts">
-import { ref, Transition, watch } from 'vue';
+import { computed, ref, Transition, watch } from 'vue';
+import emailjs from "@emailjs/browser"
 
 let config = defineModel<{ 
   step: number, 
@@ -12,6 +13,22 @@ let picPreview = ref<string>()
 let headingMoved = ref(false)
 let oldHeadingHide = ref(false)
 let isStep3Disappear = ref(false)
+let isMailSend = ref(false)
+let message = ref("")
+
+function sendEmail() {
+  emailjs.init("kawdZ1izyPitFn--n")
+  emailjs.send("service_txnjcye","template_co4i2hg",{
+    name: username.value,
+    message: message.value,
+  })
+  .then( () => {
+    message.value = ""
+    isMailSend.value = true
+    alert("ส่งแล้ว! ขอบคุณสำหรับคำอวยพรน้า")
+  })
+  .catch(() => alert("ส่งล้มเหลว โปรดลองภายหลังน้า"));
+}
 
 function nextStep(delayInSec: number = 0) {
   setTimeout(() => {
@@ -60,6 +77,10 @@ watch(config, () => {
   }
 })
 
+let buttonMsg = computed(() => {
+  return isMailSend.value ? "ขอบคุณสำหรับคำอวยพรน้า" : "ส่งเมล"
+})
+
 </script>
 
 <template>
@@ -101,8 +122,10 @@ watch(config, () => {
           </div>
         </Transition>
         <Transition name="fade">
-          <div v-if="config && config.step >= 5">
-            <h3>ขอให้ปีนี้เป็นปีที่ดีสำหรับคุณ {{ username }} นะ สิ่งไหนดีก็เก็บไว้ ไม่ดีก็ทิ้งไปในปีก่อนนะ ขอให้สุขภาพแข็งแรง คิดอะไรก็ประสบผลสำเร็จนะ <span>จาก ต่อ ถึง {{ username }}</span></h3>
+          <div v-if="config && config.step >= 5" class="wish-box">
+            <h3>ขอให้ปีนี้เป็นปีที่ดีสำหรับคุณ {{ username }} นะ สิ่งไหนดีก็เก็บไว้ ไม่ดีก็ทิ้งไปในปีก่อนนะ ขอให้สุขภาพแข็งแรง คิดอะไรก็ประสบผลสำเร็จนะ <span>จาก ต่อ ถึง {{ username }}</span> ถ้าอยากอวยพรเจ้าของเว็บไซต์ก็พิมพ์มาได้นะ</h3>
+            <textarea type="text" v-model="message" placeholder="อยากบอกอะไรก็พิมพ์มาเลย" :disabled="isMailSend"></textarea>
+            <button @click="sendEmail" :disabled="isMailSend">{{ buttonMsg }}</button>
           </div>
         </Transition>
       </div>
@@ -172,7 +195,26 @@ watch(config, () => {
     padding: 1em;
   }
 
-  input {
+  textarea {
+    max-width: 100%;
+    min-width: 100%;
+    max-height: 100px;
+    min-height: 100px;
+    resize: none;
+    padding: .5em;
+    font-size: 1em;
+    font-family: "Kanit", system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+    border-radius: 10px;
+    border: 0;
+    box-shadow: 0 0 10px 0px rgba(0, 0, 0, .15);
+    transition: outline .15s ease;
+  }
+
+  textarea:focus, textarea:not(:placeholder-shown) {
+    outline: 3px solid rgb(255, 166, 0);
+  }
+
+  input[type=file] {
     display: none;
   }
 
@@ -194,5 +236,29 @@ watch(config, () => {
   }
   label:active {
     background-color: rgb(255, 113, 52);
+  }
+
+  button {
+    padding: .6em;
+    font-size: 1em;
+    border-radius: 10px;
+    border: 0;
+    background-color: rgb(255, 113, 52);
+    color: white;
+    transition: all .15s ease;
+    font-weight: 600;
+  }
+
+  button:hover {
+    opacity: .8;
+  }
+  button:active {
+    opacity: .5;
+  }
+
+  .wish-box {
+    display: flex;
+    flex-direction: column;
+    gap: 1em;
   }
 </style>

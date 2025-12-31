@@ -85,5 +85,4 @@ watch(animationConfig, () => {
     justify-content: center;
     align-items: center;
   }
-  
 </style>
